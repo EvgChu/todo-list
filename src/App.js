@@ -1,25 +1,60 @@
 import logo from './logo.svg';
 import './App.css';
+import { render } from '@testing-library/react';
+import React, { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      todos: [],
+      todoToAdd: ""
+    };
+
+    // This binding is necessary to make `this` work in the callback
+    this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleChange(event) {
+    const nextTodoToAdd = event.target.value;
+
+    this.setState({
+      todoToAdd: nextTodoToAdd
+    });
+  }
+
+  handleClick(event) {
+    const nextTodos = this.state.todos.concat(this.state.todoToAdd);
+    const nextTodoToAdd = '';
+
+    this.setState({
+      todos: nextTodos,
+      todoToAdd: nextTodoToAdd
+    });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to My TODO List</h2>
+        </div>
+        <ul>
+          {this.state.todos.map((todo, index) => <li key={index}>{todo}</li>)}
+        </ul>
+        <input
+          type="text"
+          placeholder="New TODO"
+          value={this.state.todoToAdd}
+          onChange={this.handleChange}
+        />
+        <button onClick={this.handleClick}>Add TODO</button>
+      </div>
+    );
+  }
 }
 
 export default App;
